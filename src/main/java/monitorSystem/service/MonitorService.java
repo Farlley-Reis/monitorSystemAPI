@@ -35,6 +35,11 @@ public class MonitorService {
         running = true;
     }
 
+    public void stop() {
+        running = false;
+    }
+
+
     // Pega o status atual do monitor (se tá online, offline, ou esperando)
     public String getStatus() {
         return status;
@@ -116,6 +121,8 @@ public class MonitorService {
         }
     }
 
+
+
     // Método pra salvar as mensagens no arquivo e imprimir no console
     private void log(String msg) {
         try {
@@ -126,10 +133,21 @@ public class MonitorService {
             // Formata a mensagem com data/hora na frente
             String logLine = "[" + java.time.LocalDateTime.now() + "] " + msg + "\n";
 
-            // Imprime no console
-            System.out.print(logLine);
+            // Define as cores ANSI
+            String red = "\u001B[31m";
+            String green = "\u001B[32m";
+            String reset = "\u001B[0m";
 
-            // Escreve no arquivo monitor.log, adicionando no final do arquivo
+            // Decide a cor com base no status
+            if ("OFFLINE".equals(status)) {
+                System.out.print(red + logLine + reset);
+            } else if ("ONLINE".equals(status)) {
+                System.out.print(green + logLine + reset);
+            } else {
+                System.out.print(logLine);  // Padrão (sem cor)
+            }
+
+            // Escreve no arquivo monitor.log, adicionando no final do arquivo (sem cor)
             try (FileWriter writer = new FileWriter("logs/monitor.log", true)) {
                 writer.write(logLine);
             }
@@ -137,6 +155,7 @@ public class MonitorService {
             e.printStackTrace();
         }
     }
+
 
     // colocar http:// se n tiver
     public void ensureValidURL() {

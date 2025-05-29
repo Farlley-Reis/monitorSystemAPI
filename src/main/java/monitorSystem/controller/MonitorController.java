@@ -30,6 +30,13 @@ public class MonitorController {
         return "Monitoramento iniciado!";
     }
 
+    @GetMapping("/stop")
+    public String stopMonitoring() {
+        monitorService.stop();
+        return "Monitoramento parado!";
+    }
+
+
     @GetMapping("/status")
     public String getStatus() {
         return monitorService.getStatus();
